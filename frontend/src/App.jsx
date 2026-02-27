@@ -54,7 +54,7 @@ function App() {
     setDisplayedCode('');
     
     try {
-      const response = await axios.post('http://localhost:5000/generate-code', {
+      const response = await axios.post('http://echo-syntax.vercel.app/generate-code', {
         userPrompt: transcript
       });
       
@@ -109,7 +109,7 @@ function App() {
     const compilerName = languageMap[editorLang];
 
     try {
-      const response = await axios.post('http://localhost:5000/execute-code', {
+      const response = await axios.post('http://echo-syntax.vercel.app/execute-code', {
         compiler: compilerName,
         code: editorCode,
         save: false

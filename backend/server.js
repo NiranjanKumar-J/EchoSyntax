@@ -7,26 +7,13 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 app.use(cors());
-// TEST ROUTE: Namma server on aayiducha nu check panna!
-app.get('/', (req, res) => {
-    res.status(200).json({ 
-        status: "Active 🔥", 
-        message: "EchoSyntax Backend is Live and Running!",
-        apiKeyCheck: process.env.GROQ_API_KEY ? "Key vandhuduchu ✅" : "Vercel-la Key Innum Varala ❌"
-    });
-});
+
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 
 app.post('/generate-code', async (req, res) => {
     try {
-        // STEP 1: Key Vercel-ku vandhucha nu first check pandrom!
-        if (!process.env.GROQ_API_KEY) {
-            console.error("❌ Vercel Environment Variable Missing!");
-            return res.status(500).json({ error: "Vercel-la innum API Key theliva update aagala boss!" });
-        }
-
-        // STEP 2: Route-kulla Groq-a initialize pandrom (Boot crash aagathu)
-        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-        
         const { userPrompt } = req.body;
         
         const modelsToTry = [
@@ -135,10 +122,7 @@ app.post('/execute-code', async (req, res) => {
   }
 });
 
-// STEP 3: Vercel-ku etha maari Local vs Prod separation
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = 5000;
-    app.listen(PORT, () => console.log(`🚀 EchoSyntax Backend Server running on port ${PORT}`));
-}
+const PORT = 5000;
+app.listen(PORT, () => console.log(`🚀 EchoSyntax Backend Server running on port ${PORT}`));
 
 module.exports = app;

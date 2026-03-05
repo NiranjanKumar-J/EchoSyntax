@@ -7,6 +7,14 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 app.use(cors());
+// TEST ROUTE: Namma server on aayiducha nu check panna!
+app.get('/', (req, res) => {
+    res.status(200).json({ 
+        status: "Active 🔥", 
+        message: "EchoSyntax Backend is Live and Running!",
+        apiKeyCheck: process.env.GROQ_API_KEY ? "Key vandhuduchu ✅" : "Vercel-la Key Innum Varala ❌"
+    });
+});
 
 app.post('/generate-code', async (req, res) => {
     try {

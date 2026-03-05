@@ -8,12 +8,17 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-
 app.post('/generate-code', async (req, res) => {
     try {
+        // STEP 1: Key Vercel-ku vandhucha nu first check pandrom!
+        if (!process.env.GROQ_API_KEY) {
+            console.error("❌ Vercel Environment Variable Missing!");
+            return res.status(500).json({ error: "Vercel-la innum API Key theliva update aagala boss!" });
+        }
+
+        // STEP 2: Route-kulla Groq-a initialize pandrom (Boot crash aagathu)
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+        
         const { userPrompt } = req.body;
         
         const modelsToTry = [
@@ -122,7 +127,10 @@ app.post('/execute-code', async (req, res) => {
   }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`🚀 EchoSyntax Backend Server running on port ${PORT}`));
+// STEP 3: Vercel-ku etha maari Local vs Prod separation
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = 5000;
+    app.listen(PORT, () => console.log(`🚀 EchoSyntax Backend Server running on port ${PORT}`));
+}
 
 module.exports = app;
